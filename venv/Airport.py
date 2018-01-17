@@ -3,6 +3,10 @@ class Employee:
     self.position = position
     self.rate = rate #salary in one hour
     
+class Crew:
+  def __init__(self):
+    self.employees = []
+    
 class Plane:
   def __init__(self, model, seat, fuel_expense):
     self.model = model
@@ -13,4 +17,19 @@ class Fuel:
   def __init__(self, prise):
     self.prise = prise
     
-   
+class Flight:
+  def __init__(self, number, plane, distance, crew:
+    self.number = number
+    self.distance = distance
+    self.crew = crew
+    
+    
+    
+class Ticket:
+  def __init__(self, flight, seat_number, prise):
+    self.flight = flight
+    self.seat_number = seat_number
+    self.prise = prise
+    
+class Airline:
+  def __init__(self, crew)
