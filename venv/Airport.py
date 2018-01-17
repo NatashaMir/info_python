@@ -18,10 +18,13 @@ class Fuel:
     self.prise = prise
     
 class Flight:
-  def __init__(self, number, plane, distance, crew:
+  def __init__(self, number, plane, distance, crew):
     self.number = number
     self.distance = distance
     self.crew = crew
+  
+  def fuel_expense(self):
+    return plane.fuel_expense * distance
     
     
     
