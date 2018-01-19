@@ -30,16 +30,17 @@ class Flight:
   
 
   def sale_ticket(self, n):
-    if n <= plane.seat:
-      tickets += n
+    if n <= self.plane.seat:
+      Flight.tickets += n
     else:
         print("Number of seats exceeded")
         
   def total_cost(self):
     total=0
     for employee in self.crew.employees:
-      total+=employees.rate
-    total = total + self.plane.fuel_expense * self.distance + tickets * self.ticket_cost     
+      total+=employee.rate
+      print(employee.rate)
+    total = total + self.plane.fuel_expense * self.distance + Flight.tickets * self.ticket_cost   
     return total   
         
     
@@ -58,5 +59,8 @@ plane = Plane('Boing 134', 10, 3)
 
 fligh = Flight('RT76H', plane, 100, crew, 50)
 
+fligh.sale_ticket(10)
+
+print(fligh.total_cost())
 
   
