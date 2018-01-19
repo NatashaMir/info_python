@@ -37,9 +37,9 @@ class Flight:
         
   def total_cost(self):
     total=0
+    #salary of all employees
     for employee in self.crew.employees:
       total+=employee.rate
-      print(employee.rate)
     total = total + self.plane.fuel_expense * self.distance + Flight.tickets * self.ticket_cost   
     return total   
         
