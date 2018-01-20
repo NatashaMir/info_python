@@ -14,8 +14,8 @@ class Bouquet:
   def __init__(self):
         self.units=[]
       
-  def add(self, unit, amt = 1):
-    for i in range(amt):
+  def add(self, unit, count = 1):
+    for i in range(count):
       self.units.append(unit)
     
   def total_cost(self):
