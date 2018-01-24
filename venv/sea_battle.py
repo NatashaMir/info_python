@@ -110,6 +110,27 @@ class Field:
               break
         for k in ship_tmp:
             self.cells[k[0]][k[1]].status = 's'
+	    self.set_aureole((k[0], k[1]))
+            
+          
+    def adds(self, cord, delta):
+     	"""Функция суммирования значений двух списков"""
+     	sum_list = []
+     	for i in range(len(cord)):
+     		  sum_list.append(cord[i] + delta[i])
+     	return sum_list  
+
+    def set_aureole(self, cell):
+      delta_comb = list(comb(range(-1, 2), 2))
+      delta_comb += [(1, 1), (-1, -1)]
+      for delta in delta_comb:
+          ads = self.adds(cell, delta)
+          if ads != 0 and ads not in self.aureole and ads != cell:
+            self.aureole.append(ads)
+      for f in self.aureole:
+        print(f)
+    
+
           
  def set_halo(cords):
    halo = []
