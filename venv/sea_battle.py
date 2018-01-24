@@ -92,28 +92,40 @@ class Field:
         self.ships = []   
         self.aureole = []
             
-    def shipscreate(self, size):
-      i = 0
-      j = 0
-      for s in range(size):
-        while True:
-          i = random.randint(0, 10)
-          j = random.randint(0, 10)
-          if self.cells[i][j].status == 'p':
-            self.cells[i][j].status == 's'
-            self.aureole.append[i][j]
-            self.aureole.append[i+1][j+1]
-            self.aureole.append[i-1][j-1]
-            self.aureole.append[i+1][j-1]
-            self.aureole.append[i-1][j+1]
-            
-            
 
-      
+    def shipprint(self, size):
+        status_tmp = True
+        ship_tmp = []
+        while status_tmp == True:
+          i = random.randint(0, 9-size)
+          j = random.randint(0, 9)
+          print(i)
+          print(j)
+          for s in range(size):
+            if self.cells[i+s][j].status == 'p':
+              print(i+s)
+              ship_tmp.append([i+s,j])
+              status_tmp = False
+            else:
+              break
+        for k in ship_tmp:
+            self.cells[k[0]][k[1]].status = 's'
+          
+ def set_halo(cords):
+   halo = []
+   delta_comb = list(comb(range(-1, 2), 2))
+   delta_comb += [(1, 1), (-1, -1)]
+   for cord in cords:
+     for delta in delta_comb:
+       ads = adds(cord, delta)
+       if ads != 0 and ads not in halo and ads not in cords:
+         halo.append(ads)
+  return filter(lambda x: 0 <= x[0] <= 9 and 0 <= x[1] <= 9, halo)
 
-      for ship in ships:
-
-
+    def shipscreate(self):
+      self.ships = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+      for ship in self.ships:
+        self.shipprint(ship)
 
     def isfreecell(self):
          for i in range(0,10):
