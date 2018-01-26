@@ -1,5 +1,4 @@
 import random
-from itertools import permutations as comb
 
 
 class Game:
@@ -7,7 +6,9 @@ class Game:
         self.player1 = player1
         self.player2 = player2
 
+
     def start(self):
+
         while True:
             if self.player1.isfreecell():
                 self.player1.step()
@@ -28,28 +29,29 @@ class Game:
 
 
 class Player:
-    def __init__(self, field_self, field_opponent):
-        self.field_self = field_self
-        self.field_opponent = field_opponent
+    def __init__(self, field):
+        self.field = field
+
 
     def isfreecell(self):
-        return self.field_opponent.isfreecell()
+        return self.field.isfreecell()
 
     def step(self):
         x, y = self.getstepcoord()
-        self.field_opponent.cellwrite(x, y)
-        self.field_opponent.show()
+        self.field.shot(x, y)
+        #self.field.cellwrite(x, y)
+        self.field.show()
 
     def iswin(self):
-        return self.field_opponent.allsunk(self)
+        return self.field.allsunk()
 
     def getstepcoord(self):
         pass
 
 
 class Human(Player):
-    def __init__(self, field_self, field_opponent):
-        Player.__init__(self, field_self, field_opponent)
+    def __init__(self, field):
+        Player.__init__(self, field)
 
     def getstepcoord(self):
         x = int(input('Enter x'))
@@ -59,11 +61,13 @@ class Human(Player):
 
 
 class Computer(Player):
-    def __init__(self, field_self, field_opponent):
-        Player.__init__(self, field_self, field_opponent)
+    def __init__(self, field):
+        Player.__init__(self, field)
 
     def getstepcoord(self):
-        x, y = self.field_opponent.getfreecell()
+        x, y = self.field.getfreecell()
+        print(x)
+        print(y)
         return x, y
 
 
@@ -75,6 +79,7 @@ class Cell():
 class Ship:
     def __init__(self, ship_type, cells):
         self.ship_type = ship_type
+        self.cells = cells
         self.shoots = []
         self.state = 'Whole'
 
@@ -86,6 +91,13 @@ class Ship:
         else:
             self.state = 'Damaged'
         return self.state
+    
+    def get_cells(self):
+      for cell in self.cells:
+        print(cell)
+        
+    def get_shot(self, shot):
+      self.shoots.append(shot)
 
 
 class Field:
@@ -98,11 +110,18 @@ class Field:
             self.cells.append(tmp)
         self.ships = []
         self.aureole = []
+        self.shipscreate()
 
     def shipscreate(self):
         ships_type = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
         for ship in ships_type:
             self.shipprint(ship)
+   
+    def show_ship_cells(self):
+      for ship in self.ships:
+        ship.get_cells()
+
+
 
     def shipprint(self, size):
         status_tmp = True
@@ -110,19 +129,22 @@ class Field:
         while status_tmp == True:
             i = random.randint(0, 9 - size)
             j = random.randint(0, 9)
-            print(i)
-            print(j)
+            #print(i)
+            #print(j)
             for s in range(size):
                 if self.cells[i + s][j].status == 'p' and [i + s, j] not in self.aureole:
-                    print(i + s)
+                    #print(i + s)
                     ship_tmp.append([i + s, j])
                     status_tmp = False
                 else:
                     break
+        self.ships.append(Ship(size, ship_tmp))          
         for k in ship_tmp:
-            self.cells[k[0]][k[1]].status = 's'
+            #self.cells[k[0]][k[1]].status = 's'
+            print((k[0], k[1]))
             self.set_aureole((k[0], k[1]))
-        self.ships.append(Ship(size, ship_tmp))
+
+            
 
     def adds(self, cord, delta):
         sum_list = []
@@ -131,14 +153,14 @@ class Field:
         return sum_list
 
     def set_aureole(self, cell):
-        delta_comb = list(comb(range(-1, 2), 2))
-        delta_comb += [(1, 1), (-1, -1)]
+        delta_comb = [(1, 1), (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0)]
         for delta in delta_comb:
             ads = self.adds(cell, delta)
             if ads != 0 and ads not in self.aureole and ads != cell:
                 self.aureole.append(ads)
-        for f in self.aureole:
-            print(f)
+                self.aureole.append(cell)
+        #for f in self.aureole:
+            #print(f)
 
     def show(self):
         for i in range(0, 10):
@@ -157,55 +179,57 @@ class Field:
                     return True
         return False
 
-    def cellwrite(self, x, y):
-        self.cells[x][y].status = '*'
+    #def cellwrite(self, x, y):
+    #    self.cells[x][y].status = '*'
 
     def shot(self, x, y):
-        if self.cells[x][y].status == "s":
-            for ship in self.ships:
-                if [x, y] in ship.cell:
-                    ship.shoots.append("shot")
-                    break
-        else:
+        #if self.cells[x][y].status == "s":
+          #self.cells[x][y].status = 'd'
+        for ship in self.ships:
+          if [x, y] in ship.cells:
+            self.cells[x][y].status = 'd'
+            ship.get_shot("shot")
+            break
+          else:
             self.cells[x][y].status = '*'
 
     def allsunk(self):
         countsunk = 0
         for ship in self.ships:
-            if ship.get_state == 'Sunk':
-                countsunk += 1
-        if len(countsunk) == 10:
+          if ship.get_state() == 'Sunk':
+            countsunk += 1 
+        print(countsunk)    
+        if countsunk == 10:
             return True
         else:
             return False
 
 
-    def isline(self, mark):
-        for i in range(0, 3):
-            if self.cells[i][0].status == mark and self.cells[i][1].status == mark and self.cells[i][2].status == mark:
-                return True
-        for i in range(0, 3):
-            if self.cells[0][i].status == mark and self.cells[1][i].status == mark and self.cells[2][i].status == mark:
-                return True
-        if self.cells[0][0].status == mark and self.cells[1][1].status == mark and self.cells[2][2].status == mark:
-            return True
-        if self.cells[0][2].status == mark and self.cells[1][1].status == mark and self.cells[2][0].status == mark:
-            return True
-        return False
-
     def getfreecell(self):
+      step = True
+      while step == True:
         for i in range(0, 10):
             for j in range(0, 10):
                 if self.cells[i][j].status == 'p':
-                    return i, j
+                  return i, j
+                  step =  False
 
 
-field = Field()
 
-field.show()
 
-field.shipscreate()
+field1 = Field()
+field2 = Field()
 
-field.show()
+#field1.show_ships()
+#field1.show_ship_cells()
 
-field.show_ships()
+
+player1 = Human(field1)
+player2 = Computer(field2)
+
+#player1.isfreecell()
+#player1.step()
+
+game = Game(player1, player2)
+
+game.start()
