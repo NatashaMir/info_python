@@ -30,8 +30,9 @@ class Game:
 
 
 class Player:
-    def __init__(self, field):
+    def __init__(self, field, field_self):
         self.field = field
+        self.field_self = field_self
 
 
     def isfreecell(self):
@@ -41,6 +42,7 @@ class Player:
         x, y = self.getstepcoord()
         self.field.shot(x, y)
         self.field.show()
+        self.field_self.show_self()
 
     def iswin(self):
         return self.field.allsunk()
@@ -50,28 +52,28 @@ class Player:
 
 
 class Human(Player):
-    def __init__(self, field):
-        Player.__init__(self, field)
+    def __init__(self, field, field_self):
+        Player.__init__(self, field, field_self)
 
     def getstepcoord(self):
       while True:
         x = int(input('Enter x in [0, 9]'))
         y = int(input('Enter y in [0, 9]'))
         # print("x %s, y is %s" % (x, y))
-        if x not in range(0, 9) or y not in range(0, 9):
+        if x not in range(0, 10) or y not in range(0, 10):
           print("Coordinate in an incorrect range")
         else:
           return x, y
 
 
 class Computer(Player):
-    def __init__(self, field):
-        Player.__init__(self, field)
+    def __init__(self, field, field_self):
+        Player.__init__(self, field, field_self)
 
     def getstepcoord(self):
         x, y = self.field.getfreecell()
-        # print(x)
-        # print(y)
+        #print(x)
+        #print(y)
         return x, y
 
 
@@ -97,8 +99,10 @@ class Ship:
         return self.state
     
     def get_cells(self):
+      all_ship_cells = []
       for cell in self.cells:
-        print("ship %s point, cell is %s" % (self.ship_type, cell))
+        all_ship_cells.append(cell)
+      return all_ship_cells  
         
     def get_shot(self, shot):
       self.shoots.append(shot)
@@ -112,7 +116,7 @@ class Field:
             for j in range(0, 10):
                 tmp.append(Cell())
             self.cells.append(tmp)
-        self.ships_type = [3, 3, 2]
+        self.ships_type = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
         self.ships = []
         self.aureole = []
         self.shipscreate()
@@ -122,7 +126,18 @@ class Field:
         for i in range(0, 10):
             for j in range(0, 10):
                 print(self.cells[i][j].status + " ", end='')
-            print()    
+            print()   
+        print()    
+            
+    def show_self(self):
+      all_cells = self.show_ships_cells()
+      for i in range(0, 10):
+        for j in range(0, 10):
+          if [i, j] in all_cells:
+            print('d' + " ", end='')
+          else:
+            print('*' + " ", end='')
+        print()            
             
 # Function checks for empty cells    
     def isfreecell(self):
@@ -241,9 +256,14 @@ class Field:
             return False
             
 
-    def show_ship_cells(self):
+    def show_ships_cells(self):
+      all_ships_cells = []
       for ship in self.ships:
-        ship.get_cells()
+        all_ships_cells.append(ship.get_cells())
+      # return all_ships_cells  
+      # result = lambda all_ships_cells: [item for sublist in all_ships_cells for item in sublist]
+      all_cells = [val for sublist in all_ships_cells for val in sublist]
+      return all_cells
         
         
     def show_ships(self):
@@ -265,12 +285,12 @@ field1 = Field()
 field2 = Field()
 
 #field1.show_ships()
-#field1.show_ship_cells()
+#print(field1.show_ships_cells())
 
 
-player1 = Human(field1)
+player1 = Human(field1, field2)
 #player1 = Computer(field1)
-player2 = Computer(field2)
+player2 = Computer(field2, field1)
 
 #player1.isfreecell()
 #player1.step()
