@@ -57,7 +57,7 @@ class Human(Player):
       while True:
         x = int(input('Enter x in [0, 9]'))
         y = int(input('Enter y in [0, 9]'))
-        print("x %s, y is %s" % (x, y))
+        # print("x %s, y is %s" % (x, y))
         if x not in range(0, 9) or y not in range(0, 9):
           print("Coordinate in an incorrect range")
         else:
@@ -70,8 +70,8 @@ class Computer(Player):
 
     def getstepcoord(self):
         x, y = self.field.getfreecell()
-        print(x)
-        print(y)
+        # print(x)
+        # print(y)
         return x, y
 
 
@@ -181,7 +181,7 @@ class Field:
 
 # The function adds the areola elements to the list self.aureole = []
     def set_aureole(self, cell):
-      print("cell is %s" % (cell))
+      # print("cell is %s" % (cell))
       delta_comb = [(1, 1), (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0)]
      # add the cell to the list self.aureole = []
       if cell not in self.aureole:
@@ -234,7 +234,7 @@ class Field:
         for ship in self.ships:
           if ship.get_state() == 'Sunk':
             countsunk += 1 
-        print(countsunk)    
+        # print(countsunk)    
         if countsunk == len(self.ships_type):
             return True
         else:
