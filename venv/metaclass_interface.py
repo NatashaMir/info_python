@@ -6,22 +6,20 @@ def my_abstact(func):
     return wrapper
 
 class Interface(type):
-    abstract_method_list = []
-    count = 0
     def __new__(cls, name, base, dir):
         print("!!!")
-        if Interface.count == 0:
+        if len(base) == 0:
             print("In")
-            print(dir)
+            dir['abstact_method_list'] = []
             for key, value in dir.items():
                 print("key %s, value is %s" % (key, value))
                 if isinstance(value,collections.Callable):
                         if value.__name__ == 'wrapper':
-                            Interface.abstract_method_list.append(key)
-            Interface.count += 1
-            print(Interface.abstract_method_list)
+                            dir['abstact_method_list'].append(key)
+            print(dir['abstact_method_list'])
         else:
-            for method_name in Interface.abstract_method_list:
+            print(base[0].__dict__)
+            for method_name in base[0].__dict__['abstact_method_list']:
                 print("Methods")
                 if not method_name in dir.keys():
                     raise AssertionError()
@@ -51,8 +49,8 @@ class My_class(My_interface):
         print("f2")
 
 
-class My_classNon(My_interface):
-    pass
+#class My_classNon(My_interface):
+#    pass
 
 my = My_class()
-myNon = My_classNon()
+#myNon = My_classNon()

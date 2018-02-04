@@ -107,7 +107,7 @@ class Field:
             for j in range(0, 10):
                 tmp.append(Cell())
             self.cells.append(tmp)
-        self.ships_type = [4, 3, 3]
+        self.ships_type = [4, 3]
         self.ships = []
         self.aureole = []
         self.shipscreate()
@@ -173,7 +173,7 @@ class Field:
     def shot(self, x, y):
         for ship in self.ships:
             if [x, y] in ship.cells:
-                self.cells[x][y].status = 'd'
+                self.cells[x][y].status = 'O'
                 ship.get_shot("shot")
                 return True
             else:
@@ -190,8 +190,6 @@ class Field:
             return True
         else:
             return False
-
-
 
 
 field1 = Field()

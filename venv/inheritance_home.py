@@ -26,6 +26,7 @@ class Quadrilateral:
     def input_angle(self, angle):
         self.angles.append(angle)
 
+
 class Parallelogram(Quadrilateral):
     def __init__(self, lines, angles):
         Quadrilateral.__init__(self, 2, 1)
